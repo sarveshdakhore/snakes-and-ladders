@@ -12,4 +12,10 @@ This repository contains a Snake and Ladder game developed using Pygame. The gam
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/TBA5854/SNL.git
+   git clone https://github.com/csivitu/snakes-and-ladders.git
+   ```
+2. Install pygame using pip
+   ```sh
+   pip install pygame
+   ```
+3. Using terminal , cd into the cloned directory and run main.py
