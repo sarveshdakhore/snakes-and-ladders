@@ -405,8 +405,7 @@ if not is_started:
             pg.display.flip()
             clockk.tick(fps)
         p2.name=user_name_2
-    else:
-        p2.name="Computer"
+
 
 
     while running:
