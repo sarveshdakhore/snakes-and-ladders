@@ -50,6 +50,7 @@ loader=loading_screen()
 def conf():
     no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75))
     yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75))
+
     running1=True
     while running1:
         for event in pg.event.get():
@@ -65,8 +66,10 @@ def conf():
                         return True
         
         pg.draw.rect(window,(181, 82, 82),(0,0,1000,720))
-        no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75))
-        yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75))
+        no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75),border_radius=30)
+
+        yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75),border_radius=30)
+
         window.blit(pg.font.Font(None, 70).render("CONFIRM ?", True, (255, 243, 213)), (350,150))
         window.blit(pg.font.Font(None,50).render("YES", True, (55,139,99)), (593,473))
         window.blit(pg.font.Font(None,50).render("NO  ", True, (255,0,61)), (300,472))
@@ -209,9 +212,10 @@ def win():
         win_text = p2.name+" Wins !!!"
     text_surface2 = img_loader.font_70.render(win_text, True, (randint(0,255), randint(0,255), randint(0,255)))
     window.blit(text_surface2,(270,290))
-    quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,250,75))
+    quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,250,75),border_radius=30)
+
     window.blit(pg.font.Font(None, 36).render("QUIT", True, (255,0,61)), (647,593))
-    play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75))
+    play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75),border_radius=30)
     window.blit(pg.font.Font(None, 36).render("RESET BOARD", True, (6, 85, 53)), (161,593))
     pg.display.flip()
 class dice:
@@ -401,8 +405,7 @@ if not is_started:
             pg.display.flip()
             clockk.tick(fps)
         p2.name=user_name_2
-    else:
-        p2.name="Computer"
+
 
 
     while running:
@@ -432,8 +435,8 @@ if not is_started:
         clockk.tick(fps)
 
 turn_player=p1.name
-quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,550,375))
-play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75))
+quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,550,375),border_radius=180)
+play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75),border_radius=30)
 
 while running:
     for event in pg.event.get():
@@ -491,9 +494,9 @@ while running:
     pg_img_loader.roll_button()
     p1.img_load()
     p2.img_load()
-    quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,250,75))
+    quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,250,75),border_radius=30)
     window.blit(pg.font.Font(None, 36).render("QUIT", True, (255,0,61)), (647,593))
-    play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75))
+    play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75),border_radius=30)    
     window.blit(pg.font.Font(None, 36).render("RESET BOARD", True, (6, 85, 53)), (161,593))
     pg.display.flip()
 
