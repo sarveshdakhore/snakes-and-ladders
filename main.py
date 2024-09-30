@@ -50,6 +50,7 @@ loader=loading_screen()
 def conf():
     no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75))
     yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75))
+
     running1=True
     while running1:
         for event in pg.event.get():
@@ -66,7 +67,11 @@ def conf():
         
         pg.draw.rect(window,(181, 82, 82),(0,0,1000,720))
         no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75))
+        no_round1=pg.draw.ellipse(window,(255, 141, 141),(180,450,40,75))
+        no_round2=pg.draw.ellipse(window,(255, 141, 141),(430,450,40,75))
         yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75))
+        yes_round1=pg.draw.ellipse(window,(137,255,159),(480,450,40,75))
+        yes_round2=pg.draw.ellipse(window,(137,255,159),(730,450,40,75))
         window.blit(pg.font.Font(None, 70).render("CONFIRM ?", True, (255, 243, 213)), (350,150))
         window.blit(pg.font.Font(None,50).render("YES", True, (55,139,99)), (593,473))
         window.blit(pg.font.Font(None,50).render("NO  ", True, (255,0,61)), (300,472))
