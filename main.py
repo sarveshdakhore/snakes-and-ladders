@@ -1,6 +1,7 @@
 import pygame as pg
 from time import sleep
 from random import randint
+from math import sin
 
 class Font:
     def __init__(self, path=None, size=36):
@@ -31,111 +32,190 @@ running = True
 is_started=False
 
 class loading_screen:
-    r=g=b=255
-    title="SNL"
-    temp=temp1=1
+    r = g = b = 255
+    title = "SNL"
+    temp = temp1 = 1
+
     def load(self):
         global is_started
-        is_started=True
-        animator.lbl(font_70,self.title,255,255,255,(425,100))
-        if animator.lbl_i==len(self.title):
+        is_started = True
+        animator.lbl(font_70, self.title, 255, 255, 255, (425, 100))
+        if animator.lbl_i == len(self.title):
             if self.temp:
-                self.temp=0
+                self.temp = 0
                 pg.display.flip()
                 sleep(1)
-            self.r,self.g,self.b=animator.fade_in(font_36,"By TBA5854",self.r,self.g,self.b,(500,150))
+            self.r, self.g, self.b = animator.fade_in(font_36, "By TBA5854", self.r, self.g, self.b, (500, 150))
             if animator.faded:
                 if self.temp1:
-                    self.temp1=0
+                    self.temp1 = 0
                     pg.display.flip()
                     sleep(0.25)
-                animator.blinking(font_36,"PRESS ENTER",255,255,255,(350,450))
-
+                animator.blinking(font_36, "PRESS ENTER", 255, 255, 255, (350, 450))
+                # new animations
+                #animator.pulse(font_36, "PRESS ENTER", 255, 255, 255, (350, 450))
+                animator.bounce(font_36, "PRESS ENTER", 255, 255, 255, (350, 450))
 loader=loading_screen()
 font_70 = Font(None, 70)
 font_36 = Font("resources/test.ttf", 36)
 font_50 = Font(None, 50)
 def conf():
-    no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75))
-    yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75))
+    no = pg.draw.rect(window, (255, 141, 141), (200, 450, 250, 75))
+    yes = pg.draw.rect(window, (137, 255, 159), (500, 450, 250, 75))
 
-    running1=True
+    running1 = True
     while running1:
         for event in pg.event.get():
-            if event.type==pg.QUIT:
-                running=False
-            if event.type==pg.MOUSEBUTTONDOWN:
-                if event.button==1:
-                    mouse_pos=pg.mouse.get_pos()
+            if event.type == pg.QUIT:
+                running = False
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    mouse_pos = pg.mouse.get_pos()
                     if no.collidepoint(mouse_pos):
-                        running1=False
+                        running1 = False
                         return False
                     if yes.collidepoint(mouse_pos):
                         return True
+
+        pg.draw.rect(window, (181, 82, 82), (0, 0, 1000, 720))
+        no = pg.draw.rect(window, (255, 141, 141), (200, 450, 250, 75), border_radius=30)
+        yes = pg.draw.rect(window, (137, 255, 159), (500, 450, 250, 75), border_radius=30)
+
+        window.blit(font_70.render("CONFIRM ?", (255, 243, 213)), (350, 150))
+        window.blit(font_50.render("YES", (55, 139, 99)), (593, 473))
+        window.blit(font_50.render("NO ", (255, 0, 61)), (300, 472))
         
-        pg.draw.rect(window,(181, 82, 82),(0,0,1000,720))
-        no=pg.draw.rect(window,(255, 141, 141),(200,450,250,75),border_radius=30)
+        #  new animations used
+        animator.color_cycle(font_70, "CONFIRM ?", (350, 150))
+        # animator.bounce(font_50, "YES", 55, 139, 99, (593, 473))
+        # animator.jitter(font_50, "NO ", 255, 0, 61, (300, 472))
 
-        yes=pg.draw.rect(window,(137, 255, 159),(500,450,250,75),border_radius=30)
-
-        window.blit(font_70.render("CONFIRM ?", (255, 243, 213)), (350,150))        
-        window.blit(font_50.render("YES", (55,139,99)), (593,473))
-        window.blit(font_50.render("NO ", (255,0,61)), (300,472))
         pg.display.flip()
-
 class animations:
-    i=0
-    m=0
-    t=3
-    lbl_i=0
-    lbl_t=0
-    faded=False
-    faded_start=False
-    faded_t=0
-    blinking_i=0
-    blinking_t=1
-    blinking_q=0
-    def blinking(self,font_engine,text,r,g,b,coords):
-        if self.blinking_i>40:self.blinking_i,self.blinking_t=40,-1
-        if self.blinking_i<0:self.blinking_i,self.blinking_t=0,1
-        self.blinking_i+=self.blinking_t
-        if self.blinking_t>0:window.blit(font_engine.render(text,[r,g,b]),coords)
-    def breathing(self,font_engine,text,r,g,b,coords):
-        if max(r,g,b)>=252:
-            self.t=-1*4
-        if min(r,g,b)<=4:
-            self.t=+1*4
-        r+=self.t
-        g+=self.t
-        b+=self.t
-        window.blit(font_engine.render(text,[r,g,b]),coords)
-        return r,g,b
-    def fade_in(self,font_engine,text,r,g,b,coords):
-        if self.faded_start and self.faded_t>0:
-            self.faded=True
-            window.blit(font_engine.render(text,[r,g,b]),coords)
-            return r,g,b
-        if self.m<max(r,g,b):self.m=max(r,g,b)
-        if max(r,g,b)>=252:
-            self.faded_t=-1*4
-        if min(r,g,b)<=4:
-            self.faded_t=+1*4
-        r+=self.faded_t
-        g+=self.faded_t
-        b+=self.faded_t
-        if self.faded_start or self.faded_t>0:
-            window.blit(font_engine.render(text,[r,g,b]),coords)
-            if self.m==max(r,g,b):
-                self.faded_start=True
-        return r,g,b
-    def lbl(self,font_engine,text,r,g,b,coords):
-        if self.lbl_t==90:
-            if self.lbl_i != len(text):
-                self.lbl_i+=1
-            self.lbl_t=0
-        else:self.lbl_t+=1
-        window.blit(font_engine.render(text[:self.lbl_i],[r,g,b]),coords)
+    i = 0
+    m = 0
+    t = 3
+    lbl_i = 0
+    lbl_t = 0
+    faded = False
+    faded_start = False
+    faded_t = 0
+    blinking_i = 0
+    blinking_t = 1
+    blinking_q = 0
 
+    def blinking(self, font_engine, text, r, g, b, coords):
+        if self.blinking_i > 40: self.blinking_i, self.blinking_t = 40, -1
+        if self.blinking_i < 0: self.blinking_i, self.blinking_t = 0, 1
+        self.blinking_i += self.blinking_t
+        if self.blinking_t > 0: window.blit(font_engine.render(text, [r, g, b]), coords)
+
+    def breathing(self, font_engine, text, r, g, b, coords):
+        if max(r, g, b) >= 252:
+            self.t = -1 * 4
+        if min(r, g, b) <= 4:
+            self.t = +1 * 4
+        r += self.t
+        g += self.t
+        b += self.t
+        window.blit(font_engine.render(text, [r, g, b]), coords)
+        return r, g, b
+
+    def fade_in(self, font_engine, text, r, g, b, coords):
+        if self.faded_start and self.faded_t > 0:
+            self.faded = True
+            window.blit(font_engine.render(text, [r, g, b]), coords)
+            return r, g, b
+        if self.m < max(r, g, b): self.m = max(r, g, b)
+        if max(r, g, b) >= 252:
+            self.faded_t = -1 * 4
+        if min(r, g, b) <= 4:
+            self.faded_t = +1 * 4
+        r += self.faded_t
+        g += self.faded_t
+        b += self.faded_t
+        if self.faded_start or self.faded_t > 0:
+            window.blit(font_engine.render(text, [r, g, b]), coords)
+            if self.m == max(r, g, b):
+                self.faded_start = True
+        return r, g, b
+
+    def lbl(self, font_engine, text, r, g, b, coords):
+        if self.lbl_t == 90:
+            if self.lbl_i != len(text):
+                self.lbl_i += 1
+            self.lbl_t = 0
+        else:
+            self.lbl_t += 1
+        window.blit(font_engine.render(text[:self.lbl_i], [r, g, b]), coords)
+
+    def shake(self, font_engine, text, r, g, b, coords):
+        import random
+        offset_x = random.randint(-5, 5)
+        offset_y = random.randint(-5, 5)
+        window.blit(font_engine.render(text, [r, g, b]), (coords[0] + offset_x, coords[1] + offset_y))
+
+    def zoom_in(self, font_engine, text, r, g, b, coords, scale=1.0):
+        if scale < 2.0:
+            scale += 0.05
+        font = Font(font_engine.font.get_name(), int(font_engine.font.get_height() * scale))
+        text_surface = font.render(text,  [r, g, b])
+        window.blit(text_surface, coords)
+        return scale
+
+    def rotate(self, font_engine, text, r, g, b, coords, angle=0):
+        angle += 5
+        text_surface = font_engine.render(text, [r, g, b])
+        rotated_surface = pg.transform.rotate(text_surface, angle)
+        window.blit(rotated_surface, coords)
+        return angle
+
+        # NEW ANIMATIONS
+    def pulse(self, font_engine, text, r, g, b, coords, max_size=70, min_size=36, speed=2):
+        """Pulse the text in and out."""
+        current_size = font_engine.font.get_height()
+        if current_size >= max_size:
+            speed *= -1
+        elif current_size <= min_size:
+            speed = abs(speed)
+        new_size = current_size + speed
+        font_engine = font_50
+        window.blit(font_engine.render(text, [r, g, b]), coords)
+        return font_engine
+    
+    def wave(self, font_engine, text, r, g, b, coords, amplitude=10, frequency=5):
+        # Wave effect - each letter moves up and down in a sine wave
+        from math import sin
+        for i, char in enumerate(text):
+            offset_y = int(amplitude * sin(frequency * (i + self.i * 0.1)))
+            window.blit(font_engine.render(char, [r, g, b]), (coords[0] + i * font_engine.font.size(char)[0], coords[1] + offset_y))
+        self.i += 1
+    
+    def color_cycle(self, font_engine, text, coords, speed=1):
+        # Cycle through RGB colors smoothly.
+        from math import sin
+        r = int(127 * (1 + sin(self.i * 0.1 + 0)))
+        g = int(127 * (1 + sin(self.i * 0.1 + 2)))
+        b = int(127 * (1 + sin(self.i * 0.1 + 4)))
+        self.i += speed
+        window.blit(font_engine.render(text, [r, g, b]), coords)
+    
+    def bounce(self, font_engine, text, r, g, b, coords, height=30, speed=2):
+        # Make text bounce up and down
+        if self.i >= height:
+            speed *= -1
+        elif self.i <= -height:
+            speed = abs(speed)
+        coords = (coords[0], coords[1] + self.i)
+        self.i += speed
+        window.blit(font_engine.render(text, [r, g, b]), coords)
+    
+    def jitter(self, font_engine, text, r, g, b, coords):
+        # Create a jitter effect on text with small random movements
+        import random
+        offset_x = random.randint(-3, 3)
+        offset_y = random.randint(-3, 3)
+        window.blit(font_engine.render(text, [r, g, b]), (coords[0] + offset_x, coords[1] + offset_y))
 animator=animations()
 player_turn_color=[192, 192, 192]
 class img_loader:
@@ -447,53 +527,53 @@ play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75),border_radius=30
 
 while running:
     for event in pg.event.get():
-        if event.type==pg.QUIT:
-            running=False
-        if event.type==pg.MOUSEBUTTONDOWN:
-            if event.button==1:
-                mouse_pos=pg.mouse.get_pos()
+        if event.type == pg.QUIT:
+            running = False
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pg.mouse.get_pos()
                 if quit_box.collidepoint(mouse_pos):
                     if conf():
                         pg.display.flip()
-                        running=False
+                        running = False
                     else:
                         pg_img_loader.load()
                 if play_again.collidepoint(mouse_pos):
                     if conf():
-                        p1.square_no=p2.square_no=1
-                        p1.pos_x=188
-                        p1.pos_y=428
-                        p2.pos_x=188
-                        p2.pos_y=428
-                        turn_player=p1.name
+                        p1.square_no = p2.square_no = 1
+                        p1.pos_x = 188
+                        p1.pos_y = 428
+                        p2.pos_x = 188
+                        p2.pos_y = 428
+                        turn_player = p1.name
                         color_check()
-                        player_change.turn=1
+                        player_change.turn = 1
                         p1.img_load()
                         p2.img_load()
                         pg_img_loader.load()
                         pg.display.flip()
                     else:
                         pg_img_loader.load()
-        if p1.square_no>=100 or p2.square_no>=100:break
-        if (event.type==pg.KEYDOWN and event.key==pg.K_SPACE) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and pg_img_loader.button_rect.collidepoint(event.pos) and not is_clicked):
-                is_clicked = True
-                if is_both_players_on_same_square:
-                    p2.pos_y-=2
-                    p1.pos_y+=2
-                    is_both_players_on_same_square=0
-                dicee.roller()
-                player_change.swapper(p1,p2)
-                if p1.square_no==p2.square_no:
-                    is_both_players_on_same_square=1
-                    p1.pos_y-=2
-                    p2.pos_y+=2
+        if p1.square_no >= 100 or p2.square_no >= 100: break
+        if (event.type == pg.KEYDOWN and event.key == pg.K_SPACE) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and pg_img_loader.button_rect.collidepoint(event.pos) and not is_clicked):
+            is_clicked = True
+            if is_both_players_on_same_square:
+                p2.pos_y -= 2
+                p1.pos_y += 2
+                is_both_players_on_same_square = 0
+            dicee.roller()
+            player_change.swapper(p1, p2)
+            if p1.square_no == p2.square_no:
+                is_both_players_on_same_square = 1
+                p1.pos_y -= 2
+                p2.pos_y += 2
         if event.type == pg.MOUSEBUTTONUP and event.button == 1:
             is_clicked = False
-    if(p1.square_no>=100):
+    if p1.square_no >= 100:
         win()
         sleep(1)
         continue
-    if(p2.square_no>=100):
+    if p2.square_no >= 100:
         win()
         sleep(1)
         continue
@@ -501,11 +581,15 @@ while running:
     pg_img_loader.roll_button()
     p1.img_load()
     p2.img_load()
-    quit_box=pg.draw.rect(window,(255, 141, 141),(550,565,250,75),border_radius=30)
-    window.blit(Font(None, 36).render("QUIT", (255,0,61)), (647,593))
-    play_again=pg.draw.rect(window,(137, 255, 159),(125,565,250,75),border_radius=30)    
-    window.blit(Font(None, 36).render("RESET BOARD", (6, 85, 53)), (161,593))
+    quit_box = pg.draw.rect(window, (255, 141, 141), (550, 565, 250, 75), border_radius=30)
+    window.blit(Font(None, 36).render("QUIT", (255, 0, 61)), (647, 593))
+    play_again = pg.draw.rect(window, (137, 255, 159), (125, 565, 250, 75), border_radius=30)
+    window.blit(Font(None, 36).render("RESET BOARD", (6, 85, 53)), (161, 593))
+    
+    # new animations used here
+    # animator.wave(font_36, "RESET BOARD", 6, 85, 53, (161, 593))
+    # animator.pulse(font_36, "QUIT", 255, 0, 61, (647, 593))
+    
     pg.display.flip()
-
 pg.quit()
 print("\t\tThanks for playing\n\n\t\tA Program by TBA5854")     
