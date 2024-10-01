@@ -2,6 +2,7 @@ import pygame as pg
 from time import sleep
 from random import randint
 from math import sin
+import sys
 
 class Font:
     def __init__(self, path=None, size=36):
@@ -10,16 +11,17 @@ class Font:
     def render(self, text, color):
         return self.font.render(text, True, color)
 
-choice=int(input("Do you want to play 2 player or player vs computer : (0 for computer and 1 for 2 player)\n>>"))
-while choice not in [0,1]:
-    print("\nINVALID INPUT!!!\n")    
-    choice=int(input("Do you want to play 2 player or player vs computer : (0 for computer and 1 for 2 player)\n>>"))
-""" if choice:
-    name_1=input("Enter Player 1 Name \n>>")
-    name_2=input("Enter Player 2 Name \n>>")
-else:
-    name_1=input("Enter Player 1 Name \n>>")
-    name_2="Computer" """
+
+def draw_button(screen, text, x, y, color):
+    button_rect = pg.Rect(x, y, 200, 50)
+    pg.draw.rect(screen, color, button_rect)
+    text_surface = font_36.render(text, (255, 255, 255))
+    text_rect = text_surface.get_rect(center=button_rect.center)
+    screen.blit(text_surface, text_rect)
+    return button_rect
+
+
+
 ladder={4:25,21:39,29:74,43:76,63:80,71:89}
 snake={30:7,47:15,56:19,73:51,82:42,92:75,98:55}
 pg.init()
@@ -30,7 +32,28 @@ window=pg.display.set_mode((1000,720))
 pg.display.set_caption("Snakes and Ladders")
 running = True
 is_started=False
+font_70 = Font(None, 70)
+font_36 = Font("resources/test.ttf", 36)
+font_50 = Font(None, 50)
+def mode_selection():
+    while True:
+        window.fill((0, 0, 0))
+        single_player_button = draw_button(window, "Single Player", 400, 250, (0, 0, 255))
+        two_player_button = draw_button(window, "Two Player", 400, 350, (255, 0, 0))
 
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if single_player_button.collidepoint(event.pos):
+                    return 0
+                elif two_player_button.collidepoint(event.pos):
+                    return 1
+
+        pg.display.flip()
+
+choice = mode_selection()
 class loading_screen:
     r = g = b = 255
     title = "SNL"
@@ -56,9 +79,7 @@ class loading_screen:
                 #animator.pulse(font_36, "PRESS ENTER", 255, 255, 255, (350, 450))
                 animator.bounce(font_36, "PRESS ENTER", 255, 255, 255, (350, 450))
 loader=loading_screen()
-font_70 = Font(None, 70)
-font_36 = Font("resources/test.ttf", 36)
-font_50 = Font(None, 50)
+
 def conf():
     no = pg.draw.rect(window, (255, 141, 141), (200, 450, 250, 75))
     yes = pg.draw.rect(window, (137, 255, 159), (500, 450, 250, 75))
