@@ -52,8 +52,6 @@ running = True
 is_started = False
 dt = 60 / 10000
 
-# Continue with the rest of your game logic
-
 class Font(pg.font.Font):
     fonts=[]
     def __init__(self,font_style,font_size):
